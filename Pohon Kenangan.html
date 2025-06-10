@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pohon Kenangan - Ruang Ayah dan Anak</title>
+<style>
+  /* CSS Variables */
+  :root {
+    --clr-bg-start: #a0e9fd; /* Soft bright blue */
+    --clr-bg-end: #baf7cc; /* Light mint green */
+    --clr-text: #4a4a4a;
+    --clr-heading: #111827;
+    --clr-primary: #2563eb;          /* Vibrant blue */
+    --clr-primary-dark: #1e40af;
+    --clr-accent1: #f43f5e;          /* Bright pink/red accent */
+    --clr-accent2: #fbbf24;          /* Warm yellow accent */
+    --clr-accent3: #22c55e;          /* Vibrant green accent */
+    --clr-card-bg: rgba(255 255 255 / 0.85);
+    --radius: 0.75rem;
+    --shadow-light: 0 4px 8px rgba(0,0,0,0.1);
+    --shadow-hover: 0 8px 20px rgba(0,0,0,0.15);
+    --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --font-heading: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+  /* Reset & base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, var(--clr-bg-start), var(--clr-bg-end));
+    background-attachment: fixed;
+    color: var(--clr-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+  }
+  #app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    flex: 1 0 auto;
+    background-color: var(--clr-card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-light);
+  }
+  h1,h2,h3,h4,h5,h6 {
+    color: var(--clr-heading);
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-heading);
+    line-height: 1.1;
+  }
+  h1 {
+    font-size: 3.25rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  p {
+    font-size: 1.125rem;
+    margin: 0 0 1.5rem 0;
+  }
+  a {
+    color: var(--clr-primary);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  a:hover,
+  a:focus {
+    color: var(--clr-primary-dark);
+    outline: none;
+  }
+  button {
+    font-family: var(--font-heading);
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--clr-accent1), var(--clr-accent2));
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.125rem;
+    padding: 1rem 2.5rem;
+    box-shadow: var(--shadow-light);
+    transition: background 0.4s ease, box-shadow var(--transition);
+    user-select:none;
+  }
+  button:hover,
+  button:focus {
+    background: linear-gradient(135deg, var(--clr-accent2), var(--clr-accent3));
+    box-shadow: var(--shadow-hover);
+    outline: none;
+  }
+  input[type="text"], input[type="file"], textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    width: 100%;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+    box-shadow: inset 0 0 0 2px var(--clr-accent3);
+    outline-offset: 2px;
+    resize: vertical;
+  }
+  input[type="text"]:focus,
+  input[type="file"]:focus,
+  textarea:focus {
+    border-color: var(--clr-accent1);
+    outline: none;
+    box-shadow: 0 0 8px 3px var(--clr-accent1);
+  }
+  label {
+    font-weight: 700;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  #navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: var(--clr-card-bg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    z-index: 1000;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  #navbar .logo {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--clr-primary);
+    user-select:none;
+    letter-spacing: 0.03em;
+  }
+  #navbar nav a {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-left: 2rem;
+    color: var(--clr-primary);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  #navbar nav a:hover,
+  #navbar nav a:focus {
+    background: var(--clr-primary);
+    color: white;
+    outline: none;
+    box-shadow: var(--shadow-hover);
+  }
+  #navbar button#logoutBtn {
+    background: var(--clr-accent1);
+    border: none;
+    font-weight: 700;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.25rem;
+    color: white;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  #navbar button#logoutBtn:hover,
+  #navbar button#logoutBtn:focus {
+    background: var(--clr-accent2);
+    outline: none;
+    box-shadow: var(--shadow-hover);
+  }
+  section.view {
+    display: none;
+  }
+  section.view.active {
+    display: block;
+  }
+  /* Cover Page */
+   #cover {
+    max-width: 700px;
+    margin: 4rem auto 3rem;
+    text-align: center;
+    padding: 0 1rem;
+    background: var(--clr-card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-light);
+  }
+  #cover img#illustration {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: 0 12px 24px rgba(252 211 77 / 0.3);
+    animation: floaty 5s ease-in-out infinite;
+    user-select:none;
+  }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0);}
+    50% { transform: translateY(-12px);}
+  }
+  #cover blockquote {
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--clr-accent1);
+    margin-bottom: 3rem;
+    text-shadow: 1px 1px 3px rgba(251 191 36 / 0.8);
+    user-select:none;
+  }
+  #loginForm {
+    display: grid;
+    gap: 1.5rem;
+  }
+  #loginForm label {
+    text-align: left;
+  }
+  /* Tree View */
+  #treeView {
+    text-align: center;
+    margin-top: 2rem;
+    background: var(--clr-card-bg);
+    border-radius: var(--radius);
+    padding: 2rem 2rem 3rem;
+    box-shadow: var(--shadow-light);
+  }
+  #treeView h1 {
+    margin-bottom: 1.75rem;
+    color: var(--clr-accent3);
+    text-shadow: 1px 1px 2px rgba(34 197 94 / 0.6);
+  }
+  #treeSVG {
+    width: 320px;
+    height: 400px;
+    margin: 0 auto 2.5rem;
+    display: block;
+  }
+  #interactButton {
+    background: linear-gradient(135deg, var(--clr-accent3), var(--clr-accent2));
+    box-shadow: 0 8px 18px rgba(34 197 94 / 0.45);
+    padding: 1.1rem 2.5rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+  #interactButton:hover,
+  #interactButton:focus {
+    background: linear-gradient(135deg, var(--clr-accent2), var(--clr-accent3));
+    box-shadow: 0 12px 24px rgba(251 191 36 / 0.65);
+    outline: none;
+  }
+  .stage-0 .sprout, .stage-0 .bud, .stage-0 .flower { opacity: 0; }
+  .stage-1 .sprout { opacity: 1; }
+  .stage-1 .bud, .stage-1 .flower { opacity: 0; }
+  .stage-2 .sprout, .stage-2 .bud { opacity: 1; }
+  .stage-2 .flower { opacity: 0; }
+  .stage-3 .sprout, .stage-3 .bud, .stage-3 .flower { opacity: 1; }
+  #treeSVG path, #treeSVG circle, #treeSVG ellipse {
+    transition: opacity 0.5s ease;
+    fill: var(--clr-accent3);
+  }
+  #treeSVG .stem { fill: #166534; }
+  #treeSVG .sprout { fill: #22c55e; }
+  #treeSVG .bud { fill: #a3e635; }
+  #treeSVG .flower { fill: #fbbf24; }
+
+  /* Gallery View */
+  #galleryView {
+    max-width: 900px;
+    margin: 3rem auto 5rem;
+    background: var(--clr-card-bg);
+    border-radius: var(--radius);
+    padding: 2rem 2rem 3rem;
+    box-shadow: var(--shadow-light);
+  }
+  #galleryView h1 {
+    margin-bottom: 1.75rem;
+    color: var(--clr-accent1);
+  }
+  #photoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+    gap: 1.25rem;
+  }
+  #photoGrid img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 20px rgba(251 191 36 / 0.3);
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+  #photoGrid img:hover,
+  #photoGrid img:focus {
+    outline: none;
+    transform: scale(1.12);
+  }
+  #uploadSection {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  #uploadPhoto {
+    cursor: pointer;
+    border-color: var(--clr-accent3);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: var(--radius);
+    padding: 0.3rem;
+  }
+  #uploadButton {
+    background: linear-gradient(135deg, var(--clr-accent1), var(--clr-accent3));
+    color: white;
+    font-weight: 800;
+    padding: 0.8rem 1.75rem;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 20px rgba(251 191 36 / 0.45);
+    transition: background 0.4s ease;
+  }
+  #uploadButton:hover,
+  #uploadButton:focus {
+    background: linear-gradient(135deg, var(--clr-accent3), var(--clr-accent1));
+    outline: none;
+    box-shadow: 0 12px 30px rgba(34 197 94 / 0.6);
+  }
+
+  /* Messages View */
+  #messagesView {
+    max-width: 700px;
+    margin: 3rem auto 5rem;
+    background: var(--clr-card-bg);
+    border-radius: var(--radius);
+    padding: 2rem 2rem 3rem;
+    box-shadow: var(--shadow-light);
+  }
+  #messagesView h1 {
+    margin-bottom: 1.75rem;
+    color: var(--clr-accent3);
+  }
+  #messageList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+  #messageList li {
+    background: #ffffffcc; /* Slightly transparent white */
+    border-radius: var(--radius);
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 8px 20px rgba(251 191 36 / 0.25);
+    position: relative;
+    font-size: 1.125rem;
+    color: var(--clr-primary-dark);
+    font-weight: 600;
+  }
+  #messageList li button.btn-edit,
+  #messageList li button.btn-delete {
+    border: none;
+    background: transparent;
+    color: var(--clr-accent1);
+    font-weight: 900;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    user-select:none;
+    transition: background-color var(--transition), color var(--transition);
+  }
+  #messageList li button.btn-edit {
+    right: 4rem;
+  }
+  #messageList li button.btn-delete {
+    right: 1rem;
+  }
+  #messageList li button.btn-edit:hover,
+  #messageList li button.btn-delete:hover,
+  #messageList li button.btn-edit:focus,
+  #messageList li button.btn-delete:focus {
+    background-color: var(--clr-accent3);
+    color: white;
+    outline: none;
+  }
+  #newMessageSection {
+    display: flex;
+    flex-direction: column;
+  }
+  #newMessage {
+    resize: vertical;
+    min-height: 90px;
+    font-family: var(--font-body);
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--clr-accent3);
+    border-radius: var(--radius);
+    font-size: 1.125rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    box-shadow: inset 0 0 8px var(--clr-accent3);
+    background-color: #fefefe;
+  }
+  #newMessage:focus {
+    border-color: var(--clr-accent1);
+    outline: none;
+    box-shadow: 0 0 10px var(--clr-accent1);
+  }
+  #sendMessage {
+    align-self: flex-start;
+    margin-top: 1.2rem;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, var(--clr-accent3), var(--clr-accent1));
+    font-weight: 900;
+    font-size: 1.125rem;
+    box-shadow: 0 8px 25px rgba(251 191 36 / 0.4);
+  }
+  #sendMessage:hover,
+  #sendMessage:focus {
+    background: linear-gradient(135deg, var(--clr-accent1), var(--clr-accent3));
+    box-shadow: 0 12px 35px rgba(34 197 94 / 0.8);
+    outline: none;
+  }
+  .small-text {
+    font-size: 0.9rem;
+    color: var(--clr-primary);
+    margin-top: 0.5rem;
+    font-weight: 600;
+    user-select:none;
+  }
+
+  /* Game View */
+  #gameView {
+    max-width: 700px;
+    margin: 3rem auto 5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #d7fcec, #bfffd5);
+    border-radius: var(--radius);
+    padding: 2rem 3rem;
+    box-shadow: 0 14px 40px rgba(34 197 94 / 0.4);
+    user-select:none;
+  }
+  #gameView h1 {
+    margin-bottom: 1.75rem;
+    color: var(--clr-accent2);
+    text-shadow: 0 0 8px var(--clr-accent2);
+  }
+  #gameContainer {
+    background: #ffffffcc;
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(251 191 36 / 0.3);
+  }
+  #gameBoard {
+    margin: 0 auto 1.2rem;
+    max-width: 320px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .game-cell {
+    width: 95px;
+    height: 95px;
+    background-color: #f0fdfa;
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px rgba(34 197 94 / 0.4);
+    font-size: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select:none;
+    font-weight: 900;
+    color: var(--clr-primary-dark);
+    transition: background-color var(--transition), color var(--transition);
+  }
+  .game-cell:hover {
+    background-color: var(--clr-accent3);
+    color: white;
+  }
+  #gameMessage {
+    font-weight: 700;
+    font-size: 1.35rem;
+    margin: 0.8rem 0 1.25rem 0;
+    min-height: 2rem;
+    color: var(--clr-primary-dark);
+  }
+  #restartGameBtn {
+    padding: 0.8rem 2.5rem;
+    font-weight: 900;
+    font-size: 1.15rem;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 22px rgba(251 191 36 / 0.4);
+    background: linear-gradient(135deg, var(--clr-accent2), var(--clr-accent1));
+    color: white;
+    user-select:none;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+  #restartGameBtn:hover,
+  #restartGameBtn:focus {
+    background: linear-gradient(135deg, var(--clr-accent1), var(--clr-accent2));
+    outline: none;
+    box-shadow: 0 12px 35px rgba(252 211 77 / 0.9);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    h2 {
+      font-size: 1.7rem;
+    }
+    #uploadSection {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+    #uploadButton, #sendMessage, #restartGameBtn {
+      width: 100%;
+    }
+    .game-cell {
+      width: 80px;
+      height: 80px;
+      font-size: 42px;
+    }
+    #gameBoard {
+      max-width: 280px;
+      gap: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="navbar" hidden>
+  <div class="logo" aria-label="Logo Pohon Kenangan">🌳 Pohon Kenangan</div>
+  <nav aria-label="Navigasi utama">
+    <a href="#" data-target="treeView" tabindex="0">Pohon</a>
+    <a href="#" data-target="galleryView" tabindex="0">Galeri</a>
+    <a href="#" data-target="messagesView" tabindex="0">Pesan</a>
+    <a href="#" data-target="gameView" tabindex="0">Game</a>
+  </nav>
+  <button id="logoutBtn" aria-label="Keluar dari aplikasi">Keluar</button>
+</div>
+<main id="app" role="main">
+  <!-- Cover Page -->
+  <section id="cover" class="view active" aria-live="polite" aria-label="Halaman pembuka">
+    <img loading="lazy" src="https://cdn.pixabay.com/photo/2016/03/26/13/09/father-and-son-1284427_960_720.png" alt="Animasi seorang ayah dengan anaknya di taman" id="illustration" />
+    <h1>Ruang Pohon Kenangan</h1>
+    <blockquote>“Setiap interaksi kecil menumbuhkan ikatan dan kenangan yang akan mekar selamanya.”</blockquote>
+    <form id="loginForm" aria-label="Form masuk keluarga">
+      <label for="childName">Nama Anak</label>
+      <input type="text" id="childName" name="childName" placeholder="Masukkan nama anak" required autocomplete="off" />
+      <label for="familyCode">Kode Keluarga</label>
+      <input type="text" id="familyCode" name="familyCode" placeholder="Masukkan kode keluarga" required autocomplete="off" />
+      <button type="submit" aria-label="Masuk ke ruang pohon kenangan">Masuk</button>
+    </form>
+  </section>
+
+  <!-- Tree View -->
+  <section id="treeView" class="view" aria-live="polite" aria-label="Halaman pohon kenangan">
+    <h1>Pohon Kenangan Anda</h1>
+    <svg id="treeSVG" aria-hidden="true" viewBox="0 0 150 160" role="img" aria-label="Gambar pohon kenangan">
+      <!-- Trunk -->
+      <path class="stem" d="M70 160 L75 100 L80 160 Z" />
+      <!-- Sprout -->
+      <circle class="sprout" cx="75" cy="90" r="15" opacity="0" />
+      <!-- Bud -->
+      <ellipse class="bud" cx="75" cy="70" rx="12" ry="18" opacity="0" />
+      <!-- Flower -->
+      <path class="flower" d="M75 45 C85 40, 90 25, 75 20 C60 25, 65 40, 75 45 Z" opacity="0" />
+    </svg>
+    <p>Interaksi Anda saat ini: <strong id="interactionCount">0</strong></p>
+    <button id="interactButton" aria-label="Tambah sentuhan simbolis atau interaksi harian">Tambah Interaksi</button>
+  </section>
+
+  <!-- Gallery View -->
+  <section id="galleryView" class="view" aria-live="polite" aria-label="Galeri foto kenangan">
+    <h1>Galeri Kenangan</h1>
+    <div id="photoGrid" tabindex="0" aria-label="Galeri foto keluarga"></div>
+    <div id="uploadSection">
+      <input type="file" accept="image/*" id="uploadPhoto" aria-label="Unggah foto kenangan" />
+      <button id="uploadButton" disabled>Unggah Foto</button>
+    </div>
+  </section>
+
+  <!-- Messages View -->
+  <section id="messagesView" class="view" aria-live="polite" aria-label="Halaman pesan cinta">
+    <h1>Pesan Cinta</h1>
+    <ul id="messageList" tabindex="0" aria-label="Daftar pesan cinta"></ul>
+    <div id="newMessageSection">
+      <label for="newMessage">Tulis Pesan Baru:</label>
+      <textarea id="newMessage" rows="4" placeholder="Tulis pesan cinta di sini..."></textarea>
+      <button id="sendMessage">Kirim Pesan</button>
+      <small class="small-text">Pesan dapat diedit atau dihapus kapan saja.</small>
+    </div>
+  </section>
+
+  <!-- Game View -->
+  <section id="gameView" class="view" aria-live="polite" aria-label="Game interaktif antara ayah dan anak">
+    <h1>Game Tic-Tac-Toe</h1>
+    <div id="gameContainer">
+      <div id="gameBoard" role="grid" aria-label="Papan permainan Tic Tac Toe"></div>
+      <div id="gameMessage" aria-live="assertive" aria-atomic="true"></div>
+      <button id="restartGameBtn">Mulai Ulang Game</button>
+    </div>
+  </section>
+</main>
+
+<!-- Audio controls for user -->
+<div style="position: fixed; bottom: 1rem; right: 1rem; z-index: 1500;">
+  <button id="musicToggle" aria-label="Toggle musik latar" style="
+    padding: 0.6rem 1rem;
+    border-radius: 1.25rem;
+    border: none;
+    background: var(--clr-accent3);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(34 197 94 / 0.6);
+    cursor: pointer;
+    user-select:none;
+    transition: background 0.3s ease;
+  ">🔈 Play Musik</button>
+</div>
+
+<!-- Audio -->
+<audio id="bgMusic" loop preload="auto" aria-hidden="true" src="https://cdn.pixabay.com/download/audio/2022/03/02/audio_920d61205d.mp3?filename=gentle-harp-ambient-10850.mp3"></audio>
+
+<script>
+(() => {
+  "use strict";
+
+  // DOM elements
+  const navbar = document.getElementById('navbar');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const cover = document.getElementById('cover');
+  const treeView = document.getElementById('treeView');
+  const galleryView = document.getElementById('galleryView');
+  const messagesView = document.getElementById('messagesView');
+  const gameView = document.getElementById('gameView');
+
+  const loginForm = document.getElementById('loginForm');
+  const childNameInput = document.getElementById('childName');
+  const familyCodeInput = document.getElementById('familyCode');
+
+  const interactionCountElem = document.getElementById('interactionCount');
+  const interactButton = document.getElementById('interactButton');
+
+  const photoGrid = document.getElementById('photoGrid');
+  const uploadPhotoInput = document.getElementById('uploadPhoto');
+  const uploadButton = document.getElementById('uploadButton');
+
+  const messageList = document.getElementById('messageList');
+  const newMessageInput = document.getElementById('newMessage');
+  const sendMessageButton = document.getElementById('sendMessage');
+
+  const bgMusic = document.getElementById('bgMusic');
+  const musicToggleBtn = document.getElementById('musicToggle');
+
+  const navLinks = navbar.querySelectorAll('nav a');
+
+  const gameBoard = document.getElementById('gameBoard');
+  const gameMessage = document.getElementById('gameMessage');
+  const restartGameBtn = document.getElementById('restartGameBtn');
+
+  // App state
+  let currentView = 'cover'; // cover, treeView, galleryView, messagesView, gameView
+  let loggedIn = false;
+
+  let session = {
+    childName: '',
+    familyCode: '',
+    data: null
+  };
+
+  // Game state
+  let gameActive = false;
+  let gameState = ["","","","","","","","",""]; // 9 cells
+  let currentPlayer = "X"; // X=ayah, O=anak
+
+  // Data structure in localStorage per familyCode:
+  // {
+  //   interactionsCount: Number,
+  //   photos: [base64ImageString],
+  //   messages: [{id: string, text: string, timestamp: number}]
+  // }
+
+  // UTILITIES
+  function saveData() {
+    const dataKey = 'pohonKenanganData_' + session.familyCode;
+    localStorage.setItem(dataKey, JSON.stringify(session.data));
+  }
+
+  function loadData() {
+    const dataKey = 'pohonKenanganData_' + session.familyCode;
+    const d = localStorage.getItem(dataKey);
+    if (d) {
+      session.data = JSON.parse(d);
+      if (!Array.isArray(session.data.photos)) session.data.photos = [];
+      if (!Array.isArray(session.data.messages)) session.data.messages = [];
+      if (typeof session.data.interactionsCount !== 'number') session.data.interactionsCount = 0;
+    } else {
+      session.data = {
+        interactionsCount: 0,
+        photos: [],
+        messages: []
+      };
+      saveData();
+    }
+  }
+
+  function showView(viewId) {
+    [cover, treeView, galleryView, messagesView, gameView].forEach(view => {
+      view.classList.remove('active');
+    });
+    const viewMap = {cover, treeView, galleryView, messagesView, gameView};
+    if (viewMap[viewId]) {
+      viewMap[viewId].classList.add('active');
+      currentView = viewId;
+    }
+  }
+
+  function updateTree() {
+    const count = session.data.interactionsCount;
+    interactionCountElem.textContent = count;
+
+    const svg = document.getElementById('treeSVG');
+    svg.classList.remove('stage-0', 'stage-1', 'stage-2', 'stage-3');
+    let stage = 0;
+    if (count === 0) stage = 0;
+    else if (count <= 4) stage = 1;
+    else if (count <= 9) stage = 2;
+    else stage = 3;
+
+    svg.classList.add('stage-' + stage);
+  }
+
+  function addInteraction() {
+    session.data.interactionsCount++;
+    saveData();
+    updateTree();
+  }
+
+  // PHOTO GALLERY
+  function renderPhotos() {
+    photoGrid.innerHTML = '';
+    if (session.data.photos.length === 0) {
+      photoGrid.innerHTML = '<p style="color:#4b5563;">Belum ada foto kenangan. Unggah foto untuk memperkaya galeri.</p>';
+      return;
+    }
+    session.data.photos.forEach((photoBase64, idx) => {
+      const img = document.createElement('img');
+      img.src = photoBase64;
+      img.alt = `Foto kenangan ${idx+1}`;
+      img.setAttribute('tabindex', '0');
+      img.title = 'Klik untuk menghapus foto ini';
+      img.style.userSelect = 'none';
+
+      img.addEventListener('click', () => {
+        if (confirm('Hapus foto ini dari galeri?')) {
+          session.data.photos.splice(idx, 1);
+          saveData();
+          renderPhotos();
+        }
+      });
+
+      photoGrid.appendChild(img);
+    });
+  }
+
+  function handlePhotoUpload() {
+    const file = uploadPhotoInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Mohon pilih file gambar.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result.length > 1_000_000) {
+        alert('Foto terlalu besar. Silakan pilih foto yang lebih kecil.');
+        return;
+      }
+      session.data.photos.push(reader.result);
+      saveData();
+      renderPhotos();
+      uploadPhotoInput.value = '';
+      uploadButton.disabled = true;
+      addInteraction();
+      alert('Foto berhasil diunggah!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function updateUploadButtonState() {
+    uploadButton.disabled = !uploadPhotoInput.files.length;
+  }
+
+  // MESSAGES
+  function renderMessages() {
+    messageList.innerHTML = '';
+    if (session.data.messages.length === 0) {
+      messageList.innerHTML = '<li style="color:#4b5563;">Belum ada pesan cinta. Tulis pesan untuk mengungkapkan kasih sayang Anda.</li>';
+      return;
+    }
+    session.data.messages.forEach(msg => {
+      const li = document.createElement('li');
+      li.setAttribute('tabindex', '0');
+      const textDiv = document.createElement('div');
+      textDiv.textContent = msg.text;
+      li.appendChild(textDiv);
+
+      const btnEdit = document.createElement('button');
+      btnEdit.className = 'btn-edit';
+      btnEdit.textContent = 'Edit';
+      btnEdit.setAttribute('aria-label', 'Edit pesan');
+      btnEdit.addEventListener('click', () => editMessage(msg.id));
+
+      const btnDelete = document.createElement('button');
+      btnDelete.className = 'btn-delete';
+      btnDelete.textContent = 'Hapus';
+      btnDelete.setAttribute('aria-label', 'Hapus pesan');
+      btnDelete.addEventListener('click', () => {
+        if (confirm('Anda yakin ingin menghapus pesan ini?')) {
+          deleteMessage(msg.id);
+        }
+      });
+
+      li.appendChild(btnEdit);
+      li.appendChild(btnDelete);
+      messageList.appendChild(li);
+    });
+  }
+
+  function generateId() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  function sendMessage() {
+    let text = newMessageInput.value.trim();
+    if (!text) {
+      alert('Tuliskan pesan sebelum dikirim.');
+      newMessageInput.focus();
+      return;
+    }
+    const newMsg = { id: generateId(), text, timestamp: Date.now() };
+    session.data.messages.push(newMsg);
+    saveData();
+    renderMessages();
+    newMessageInput.value = '';
+    addInteraction();
+  }
+
+  function editMessage(id) {
+    const msg = session.data.messages.find(m => m.id === id);
+    if (!msg) return;
+    const newText = prompt('Edit pesan:', msg.text);
+    if (newText === null) return;
+    if (newText.trim() === '') {
+      alert('Pesan tidak boleh kosong.');
+      return;
+    }
+    msg.text = newText.trim();
+    saveData();
+    renderMessages();
+  }
+
+  function deleteMessage(id) {
+    session.data.messages = session.data.messages.filter(m => m.id !== id);
+    saveData();
+    renderMessages();
+  }
+
+  // NAVIGATION
+  function navigateTo(viewId) {
+    if (!loggedIn) return; 
+    showView(viewId);
+    switch(viewId) {
+      case 'treeView': interactButton.focus(); break;
+      case 'galleryView': uploadPhotoInput.focus(); break;
+      case 'messagesView': newMessageInput.focus(); break;
+      case 'gameView': {
+        restartGameBtn.focus(); break;
+      }
+    }
+  }
+
+  // LOGIN
+  function login(ev) {
+    ev.preventDefault();
+    const childName = childNameInput.value.trim();
+    const familyCodeRaw = familyCodeInput.value.trim();
+
+    if (!childName || !familyCodeRaw) {
+      alert('Mohon isi nama anak dan kode keluarga.');
+      return;
+    }
+    const familyCode = familyCodeRaw.toUpperCase().replace(/\s+/g, '');
+    session.childName = childName;
+    session.familyCode = familyCode;
+
+    loadData();
+
+    loggedIn = true;
+    navbar.hidden = false;
+    cover.hidden = true;
+    showView('treeView');
+
+    updateTree();
+    renderPhotos();
+    renderMessages();
+    initGame();
+
+    loginForm.reset();
+
+    startMusic();
+    updateMusicButton();
+  }
+
+  function logout() {
+    if (confirm('Apakah Anda yakin ingin keluar? Semua data disimpan secara lokal.')) {
+      loggedIn = false;
+      navbar.hidden = true;
+      showView('cover');
+      cover.hidden = false;
+      session = { childName: '', familyCode: '', data: null };
+      pauseMusic();
+    }
+  }
+
+  // BACKGROUND MUSIC CONTROLS
+  function startMusic() {
+    if (bgMusic.paused) {
+      bgMusic.volume = 0.15;
+      bgMusic.play().catch(() => {});
+      musicToggleBtn.textContent = '🔊 Pause Musik';
+    }
+  }
+  function pauseMusic() {
+    if (!bgMusic.paused) {
+      bgMusic.pause();
+      musicToggleBtn.textContent = '🔈 Play Musik';
+    }
+  }
+  function toggleMusic() {
+    if (bgMusic.paused) startMusic();
+    else pauseMusic();
+  }
+  function updateMusicButton() {
+    musicToggleBtn.textContent = bgMusic.paused ? '🔈 Play Musik' : '🔊 Pause Musik';
+  }
+  musicToggleBtn.addEventListener('click', () => {
+    toggleMusic();
+  });
+  bgMusic.addEventListener('ended', () => musicToggleBtn.textContent = '🔈 Play Musik');
+
+  // TIC-TAC-TOE GAME LOGIC
+  const winConditions = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function isWin(board, player) {
+    return winConditions.some(condition => condition.every(idx => board[idx] === player));
+  }
+
+  function isDraw(board) {
+    return board.every(cell => cell !== "");
+  }
+
+  function updateGameMessage(text) {
+    gameMessage.textContent = text;
+  }
+
+  function handleCellClick(e) {
+    const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+    if (!gameActive || gameState[idx] !== "") return;
+    gameState[idx] = currentPlayer;
+    renderGameBoard();
+    if (isWin(gameState, currentPlayer)) {
+      updateGameMessage(`${currentPlayer === 'X' ? 'Ayah' : 'Anak'} memenangkan permainan! 🎉`);
+      gameActive = false;
+      addInteraction();
+      return;
+    }
+    if (isDraw(gameState)) {
+      updateGameMessage('Permainan seri! 🤝');
+      gameActive = false;
+      addInteraction();
+      return;
+    }
+    currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    updateGameMessage(`${currentPlayer === 'X' ? 'Giliran Ayah (X)' : 'Giliran Anak (O)'}`);
+  }
+
+  function renderGameBoard() {
+    gameBoard.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'game-cell';
+      cell.setAttribute('data-idx', i);
+      cell.setAttribute('role', 'gridcell');
+      cell.setAttribute('tabindex', '0');
+      cell.textContent = gameState[i];
+      cell.addEventListener('click', handleCellClick);
+      cell.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCellClick(e);
+        }
+      });
+      gameBoard.appendChild(cell);
+    }
+  }
+
+  function initGame() {
+    gameActive = true;
+    gameState = ["","","","","","","","",""];
+    currentPlayer = "X";
+    updateGameMessage("Giliran Ayah (X)");
+    renderGameBoard();
+  }
+
+  restartGameBtn.addEventListener('click', () => {
+    initGame();
+  });
+
+  // EVENT LISTENERS
+  loginForm.addEventListener('submit', login);
+  logoutBtn.addEventListener('click', logout);
+
+  interactButton.addEventListener('click', () => {
+    addInteraction();
+    alert('Terima kasih atas interaksinya! Pohon Anda tumbuh sedikit lagi 🌱');
+  });
+
+  uploadPhotoInput.addEventListener('change', updateUploadButtonState);
+  uploadButton.addEventListener('click', handlePhotoUpload);
+  sendMessageButton.addEventListener('click', sendMessage);
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.getAttribute('data-target');
+      if (target) navigateTo(target);
+    });
+  });
+
+  // INIT
+  showView('cover');
+
+})();
+</script>
+
+</body>
+</html>
+
